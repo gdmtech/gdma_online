@@ -23,6 +23,7 @@ from pymongo import MongoClient
 
 #create a flash app
 app = Flask(__name__)
+#allow CORS for all endpoints
 CORS(app)
 
 #endpoint value
@@ -37,7 +38,8 @@ def mongoquery():
     #access the dating collection in the datingdb
     csvcollection=db["courses"]
     print('JSON Query=',query)
-    query_result=db["modules"].find(query)
+    #projection without _id
+    query_result=db["modules"].find(query,{"_id":0,"Module Name":1, "Module Description":1})
     #Display search result SHOW * FROM gdmcases 
     query_data=[]
     print('query result=",query-result')
@@ -51,8 +53,14 @@ def mongoquery():
     #read query result into a pandas dataframe
     querydf=pd.DataFrame(query_data)
     print(querydf)
-    #result=json.dumps(querydf)
-    return('QUERY RESULT OK')
+    result=[]
+    print('Result',result)
+    #create a JSON row by row with an text indent of 4 spaces
+    result=querydf.to_json(orient="index", indent=4)
+    #prepare return of data
+    print('Result',result)
+    print("Exit MONGO QUERY")
+    return json.dumps(result)
 
 #endpoint value
 #pass data via the POST form value or in the URL (if using insomnia)
