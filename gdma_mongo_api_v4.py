@@ -23,12 +23,11 @@ from pymongo import MongoClient
 
 #create a flash app
 app = Flask(__name__)
-
+CORS(app)
 
 #endpoint value
 #pass data via the POST form value or in the URL (if using insomnia)
 @app.route('/mongoquery', methods=['POST','GET'])
-@cross_origin()
 def mongoquery():
     print("Enter MONGO QUERY")
     mongoclient = MongoClient("mongodb://localhost:27017/")
@@ -49,7 +48,7 @@ def mongoquery():
         query_data.append(x)
     print(query_result)
     print (query_data)
-    #read query result into a dataframe
+    #read query result into a pandas dataframe
     querydf=pd.DataFrame(query_data)
     print(querydf)
     #result=json.dumps(querydf)
