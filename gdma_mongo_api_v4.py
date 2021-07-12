@@ -2,7 +2,7 @@
 
 #from flask_cors import CORS
 from flask import Flask, json, request
-
+from flask_cors import CORS
 ##from spacy.lemmatizer import ADJ, NOUN
 #from spacy_wordnet.wordnet_annotator import WordnetAnnotator
 from waitress import serve
@@ -20,10 +20,12 @@ from pymongo import MongoClient
 
 #create a flash app
 app = Flask(__name__)
+CORS(app)
 
 #endpoint value
 #pass data via the POST form value or in the URL (if using insomnia)
 @app.route('/mongoquery', methods=['POST','GET'])
+#route specific CORS enabled
 def mongoquery():
     print("Enter MONGO QUERY")
     mongoclient = MongoClient("mongodb://localhost:27017/")
