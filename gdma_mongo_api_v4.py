@@ -59,6 +59,7 @@ def mongoquery():
     result=querydf.to_json(orient="records", indent=4)
     #prepare return of data
     print('Result',result)
+    print('JSON Query=',query)
     print("Exit MONGO QUERY")
     #return JSON so front-end can iterate objects efficiently
     return result
@@ -142,8 +143,8 @@ def mongowrite():
     return('ok')
 
  #app.run() ##Replaced with below code to run it using waitress 
- #host is the local server ip
-serve(app, host='127.0.0.1', port=8020)
+ #host is on the local machine any IP addresses
+serve(app, host='0.0.0.0', port=8020)
 
 
 
