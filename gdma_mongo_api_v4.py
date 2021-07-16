@@ -68,17 +68,17 @@ def mongolist():
     db=mongoclient["gdma"]
     #Query JSON passed to the API from AXIOS 
     #Query should be a query on a specific programme #{"Programme_ID":X}
-    query = request.json
-    print('JSON Query=',query)
+    prog_query = request.json
+    print('JSON Query=',prog_query)
     #we load the gdma_all collection which combines modules, programmes, instructors and streams
     #find returns a JSON dictionary for "Programme_ID":X
-    query_result=db["gdma_all"].find(query,{"_id":0})
+    query_result=db["gdma_all"].find(prog_query,{"_id":0})
     #convert the query data into a DF
     #put each document returned into a list
     query_data=[]
     for x in query_result:
         query_data.append(x)
-    #read list item intointo a pandas dataframe
+    #read list item intointo a pandas dataframe querydf
     querydf=pd.DataFrame(query_data)
     #create a JSON data structure from the querydf to be returned to AXIOS
     #extract the IDS
@@ -89,7 +89,7 @@ def mongolist():
     print("IDS",IDS)
     ID_list=IDS[0]
     ID_list=ID_list.split(",")
-    comp_query='['
+    comp_query=''
     print('ID List=',ID_list)
     for i in range(len(ID_list)):
         #we need to construct a query with each module id
@@ -99,8 +99,11 @@ def mongolist():
         print('comp_query',comp_query)
 
     #we need to create a json object to use in the MongoDB query - use JSON's json.loads api
-    #comp_query=json.loads('{"Module_ID":"'+ID_list[i]+'"}')    
-    comp_query='{"$or":'+comp_query+']}'
+    #comp_query=json.loads('{"Module_ID":"'+ID_list[i]+'"}')   
+    #add the parent programme to the query so we can view the document later
+    #gp back to the pandas dataframe querydf and extract the programme nunber
+    pid=querydf['Programme_ID'].values[0]
+    comp_query='{"$or":['+comp_query+',{"Programme_ID":"'+pid+'"}]}'
     print('comp_query',comp_query)
     #convert query to json
     comp_query=json.loads(comp_query)
