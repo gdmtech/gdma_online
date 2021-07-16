@@ -26,36 +26,29 @@ app = Flask(__name__)
 #allow CORS for all endpoints
 CORS(app)
 
-#endpoint value
-#pass data via the POST form value or in the URL (if using insomnia)
+# Query : a json query 
+# Return: a json structure of the query result (projected without _ID)
 @app.route('/mongoquery', methods=['POST','GET'])
 def mongoquery():
-    print("Enter MONGO QUERY")
+    print("Enter MONGO QUERY on")
+    print("Modules")
     mongoclient = MongoClient("mongodb://localhost:27017/")
+    #load the GDMA Database
     db=mongoclient["gdma"]
+    #Query JSON passed to the API from AXIOS - its assumed the query will operate 
+    #The query can be user-gner
     query = request.json
-    #query={"Name":"David"}
-    #access the dating collection in the datingdb
-    csvcollection=db["courses"]
     print('JSON Query=',query)
-    #projection without _id
-    query_result=db["modules"].find(query,{"_id":0})
-    #Display search result SHOW * FROM gdmcases 
+    #out will not include the auto-id
+    #we load the gdma_all collection which combines modules, programmes, instructors and streams
+    query_result=db["gdma_all"].find(query,{"_id":0})
+    #convert the query cursor into a list
     query_data=[]
-    print('query result=",query-result')
     for x in query_result:
-        print('Matching Document=',x)
-        print(query_data)
-        print (x)
         query_data.append(x)
-    print(query_result)
-    print (query_data)
-    #read query result into a pandas dataframe
     querydf=pd.DataFrame(query_data)
-    print(querydf)
+    #create a JSON data structure from the querydf to be returned to AXIOS
     result=[]
-    print('Result',result)
-    #create a JSON row by row with an text indent of 4 spaces
     result=querydf.to_json(orient="records", indent=4)
     #prepare return of data
     print('Result',result)
@@ -64,9 +57,72 @@ def mongoquery():
     #return JSON so front-end can iterate objects efficiently
     return result
 
-#endpoint value
-#pass data via the POST form value or in the URL (if using insomnia)
+# Query : a json query with a PROGRAMME NUMBER  
+# Return: a json structure of MODULES in the PROGRAMME (projected without _ID)
+@app.route('/mongolist', methods=['POST','GET'])
+def mongolist():
+    print("Enter MONGO LIST ")
+    print("Modules")
+    mongoclient = MongoClient("mongodb://localhost:27017/")
+    #load the GDMA Database
+    db=mongoclient["gdma"]
+    #Query JSON passed to the API from AXIOS 
+    #Query should be a query on a specific programme #{"Programme_ID":X}
+    query = request.json
+    print('JSON Query=',query)
+    #we load the gdma_all collection which combines modules, programmes, instructors and streams
+    #find returns a JSON dictionary for "Programme_ID":X
+    query_result=db["gdma_all"].find(query,{"_id":0})
+    #convert the query data into a DF
+    #put each document returned into a list
+    query_data=[]
+    for x in query_result:
+        query_data.append(x)
+    #read list item intointo a pandas dataframe
+    querydf=pd.DataFrame(query_data)
+    #create a JSON data structure from the querydf to be returned to AXIOS
+    #extract the IDS
+    result=[]
+    #extract the value of Module ID element form the data frame e.g. 1,6,9,10
+    IDS=querydf['Module_IDS'].values
+    #split the value into its component modules, e.g. [1,6,9,10]
+    print("IDS",IDS)
+    ID_list=IDS[0]
+    ID_list=ID_list.split(",")
+    comp_query='['
+    print('ID List=',ID_list)
+    for i in range(len(ID_list)):
+        #we need to construct a query with each module id
+        comp_query=comp_query+('{"Module_ID":"'+ID_list[i]+'"}')    
+        if i<len(ID_list)-1:
+            comp_query=comp_query+","
+        print('comp_query',comp_query)
 
+    #we need to create a json object to use in the MongoDB query - use JSON's json.loads api
+    #comp_query=json.loads('{"Module_ID":"'+ID_list[i]+'"}')    
+    comp_query='{"$or":'+comp_query+']}'
+    print('comp_query',comp_query)
+    #convert query to json
+    comp_query=json.loads(comp_query)
+    print('comp_query as JSON',comp_query)
+    result=(db["gdma_all"].find(comp_query,{"_id":0}))
+    print("Prepare for Exit")
+    print("result",result)
+    #Now we preare the cursor for returning to AXIOS
+    query_data=[]
+    for x in result:
+        query_data.append(x)
+    querydf=pd.DataFrame(query_data)
+    print("Prepare for Exit")
+    #create a JSON data structure from the querydf to be returned to AXIOS
+    result=[]
+    result=querydf.to_json(orient="records", indent=4)
+    #prepare return of data
+    print('Result',result)
+    print('JSON Query=',comp_query)
+    print("Exit MONGO LIST")
+    #return JSON so front-end can iterate objects efficiently
+    return result
 
 @app.route('/mongowrite', methods=['POST','GET'])
 def mongowrite():
