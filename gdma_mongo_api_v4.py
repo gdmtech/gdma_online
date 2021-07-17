@@ -59,8 +59,8 @@ def mongoquery():
 
 # Query : a json query with a PROGRAMME NUMBER  
 # Return: a json structure of MODULES in the PROGRAMME (projected without _ID)
-@app.route('/mongolist', methods=['POST','GET'])
-def mongolist():
+@app.route('/mongolistmodules', methods=['POST','GET'])
+def mongolistmodules():
     print("Enter MONGO LIST ")
     print("Modules")
     mongoclient = MongoClient("mongodb://localhost:27017/")
