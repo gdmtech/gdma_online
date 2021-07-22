@@ -102,8 +102,9 @@ def mongolistmodules():
     #comp_query=json.loads('{"Module_ID":"'+ID_list[i]+'"}')   
     #add the parent programme to the query so we can view the document later
     #gp back to the pandas dataframe querydf and extract the programme nunber
-    pid=querydf['Programme_ID'].values[0]
-    comp_query='{"$or":['+comp_query+',{"Programme_ID":"'+pid+'"}]}'
+    #pid=querydf['Programme_ID'].values[0]
+
+    comp_query='{"$or":['+comp_query+']}'
     print('comp_query',comp_query)
     #convert query to json
     comp_query=json.loads(comp_query)
