@@ -1,0 +1,200 @@
+<html>
+
+<head>
+    <!--MOJO DEMO-->
+    <!--<script src="js/jquery-3.6.0.js"></script>-->
+
+    <!-- Add Bootstrap and Bootstrap-Vue CSS to the <head> section-->
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+
+    <!-- Add Vue and BootstrapVue scripts just before the closing </body> tag -->
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+    <!-- Vue 3 
+<script src="https://unpkg.com/vue/dist/vue.js"></script>-->
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <!--AXIOS Promise based HTML-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <!--TESTING CODE
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <input type="text" class="query">
+    <button class="go">READ THE DATABASE</button>
+    </div>
+    <div class="result"></div>
+
+    <h1>VUE APP AREA</h1>
+    <div id="app3">
+        <span v-if="seen">Now you see me</span>
+    </div>
+
+    <div id="app-4">
+        <ol>
+            <li v-for="todo in todos">
+                {{ todo.text }}
+            </li>
+        </ol>
+    </div>
+
+    <div id="app-5">
+        <p>{{ message }}</p>
+        <p>{{ count }}</p>
+        <button v-on:click="messup">Add spaces and reverse</button>
+        <button v-on:click="reverse">Add spaces</button>
+        <button v-on:click="other">Other</button>
+    </div>
+
+    <div id="app-6">
+        <p>{{ message }}</p>
+        <input v-model="message">
+        <blog-post author="bob" title="C"></blog-post>
+        
+    </div>
+
+
+
+    <div id="components-demo">
+        <button-count owner="david"></button-count>
+        <button-count owner="jo"></button-count>
+        <button-count owner="ann"></button-count>
+    </div>
+    GDM-DEMO
+  
+    <div id="gdma-demo">
+        <div :style="{fontSize:size+'em'}">
+            <h2>{{school}}</h2>
+            <module v-for=" post in posts " v-bind:key="post.id " v-bind:post="post" v-on:enlarge="size+=0.1" v-on:smaller="size-=0.1"></module>
+            <p>Fontsize ={{size}}</p>
+        </div>
+    </div>
+    AJAX DEMO with REMOTE ORIGIN
+    <div id="ajax2">
+        <p>This data is off-site</p>
+        <div v-for="post in posts">{{post.id}}:Post Title : {{post.title}}</v-for>
+        </div>
+    </div>
+
+    MONGDB FORMAT SEARCH OF WAITRESS-HOSTED RESTFUL DATABASE QUERY  API 
+    <div id="ajax">
+        <div :style="{fontSize:gdmsize+'em'}">
+            <p>This data is from MOJO GDMA API</p>
+            <input type="text" v-model="query" placeholder="Enter a MongoDB Formated Query">
+            <button v-on:click="fetchData">Search</button>
+            <!-- <div v-for="post in posts">Module Name = {{post.'Module Name'}}Language = {{post.Languages}}</v-for>
+            <module2 v-for=" post in posts " v-bind:key="post.id " v-bind:post="post" v-on:gdmenlarge="gdmsize+=0.1" v-on:gdmsmaller="gdmsize-=0.1"></module2>
+            <p>Fontsize ={{gdmsize}}</p>
+        </div>
+    </div>
+
+SEARCH TERM SEARCH OF WAITRESS-HOSTED RESTFUL DATABASE QUERY  API 
+<div id="ajax3">
+    <div :style="{fontSize:gdmsize+'em'}">
+        <p>This data is from MOJO GDMA API</p>
+        <input type="text" v-model="query" placeholder="Enter a keyword">
+        <button v-on:click="fetchData">Search</button>
+        <!-- <div v-for="post in posts">Module Name = {{post.'Module Name'}}Language = {{post.Languages}}</v-for>
+        <module2 v-for=" post in posts " v-bind:key="post.id " v-bind:post="post" v-on:gdmenlarge="gdmsize+=0.1" v-on:gdmsmaller="gdmsize-=0.1"></module2>
+        <p>Fontsize ={{gdmsize}}</p>
+    </div>
+</div>
+-->
+    SEARCH THE GDMA DATABASE FOR KEYWORD - RETURN HITS FROM PROGRAMME NAME or MODULE NAME
+    <div id="gdma_list">
+        <div :style="{fontSize:gdmsize+'em'}">
+            <p>CHOOSE A PROGRAMME AND SEE THE MODULES</p>
+            <!--<b-button v-on:click="fetchaAllProgrammes" class="active">LIST ALL PROGRAMMES</b-button>-->
+            <select id="progselect" v-model="pn" v-on:change="getindex($event)" :select-size="10">
+            <!--Read the list from a prop, not from the database-->
+                <option  v-for=" post in posts " v-bind:key="post.Programme_ID">{{post.Programme_Name}}</option>
+            </select>
+            <br><br>
+            <b-button v-on:click="fetchaAllModules" class="active">LIST ALL MODULES</b-button>
+            </br>
+            </br>
+            <input type="text" v-model="pn" placeholder="Enter a Programme Number (1-11)">
+            <b-button v-on:click="fetchaProgramme" class="active">VIEW PROGRAMME DETAILS</b-button>
+            <div v-if="view_progs==1">
+                <listprogrammeslong v-for=" post in posts " v-bind:key="post.id " v-bind:post="post" v-on:listmodules="fetchList" v-on:gdmenlarge="gdmsize+=0.1" v-on:gdmsmaller="gdmsize-=0.1"></listprogrammeslong>
+            </div>
+            <div v-if="view_modules==1">
+                <listmoduleslong v-for=" post in posts " v-bind:key="post.id " v-bind:post="post" v-on:gdmenlarge="gdmsize+=0.1" v-on:gdmsmaller="gdmsize-=0.1">
+                </listmoduleslong>
+            </div>
+        </div>
+        <p>Progs ={{view_progs}}</p>
+        <p>Modules ={{view_modules}}</p>
+    </div>
+    <br>
+    <br>
+    <div id="gdma_search">
+        <div :style="{fontSize:gdmsize+'em'}">
+            <input type="text" v-model="query" placeholder="Enter a keyword"><br>
+            <input type="radio" id="radio1" v-model="filter" value="programmes">
+            <label for="radio1">Programmes</label><br>
+            <input type="radio" id="radio2" v-model="filter" value="modules">
+            <label for="radio2">Modules</label><br>
+            <br>
+            <b-button v-on:click="fetchData" class="active">Search Term</b-button>
+            </br>
+            <span>Previous Searches</span><br>
+            <b-form-select v-model="query" :selected="query" :select-size="4">
+                <b-form-select-option :value="null" disabled>-- Select a keyword --</b-form-select-option>
+                <b-form-select-option v-for="search in history" v-bind:value="search" disabled: true>{{ search }}</b-form-select-option>
+            </b-form-select>
+
+            <!--Conditioanl Rednder of Search result-->
+            <p>Search result for "{{filter}}"</p>
+            <div v-if="filter=='modules'">
+                <listmodules v-for=" post in posts " v-bind:key="post.id " v-bind:post="post" v-on:gdmenlarge="gdmsize+=0.1" v-on:gdmsmaller="gdmsize-=0.1"></listmodules>
+            </div>
+
+            <div v-if="filter=='programmes'">
+                <listprogrammes v-for=" post in posts " v-bind:key="post.id " v-bind:post="post" v-on:listmodules="gdmsize+=0.1" v-on:gdmenlarge="gdmsize+=0.1" v-on:gdmsmaller="gdmsize-=0.1"></listprogrammes>
+            </div>
+
+            <p>Fontsize ={{gdmsize}}</p>
+        </div>
+    </div>
+
+
+
+    <!-- 
+    ROUTING DEMO
+    <div id="routes ">
+        <h1>Hello Root!</h1>
+        <p>
+            <!-- use router-link component for navigation. -->
+    <!-- specify the link by passing the `to` prop. -->
+    <!-- `<router-link>` will be rendered as an `<a>` tag by default 
+            <page title="Page1 "></page>
+            <page title="Page2 "></page>
+        </p>
+        <!-- route outlet -->
+    <!-- component matched by the route will render here 
+    </div>
+
+    <div id="route3 ">
+        <h1>Hello App!</h1>
+        <p>
+            <!-- use router-link component for navigation. -->
+    <!-- specify the link by passing the `to` prop. -->
+    <!-- `<router-link>` will be rendered as an `<a>` tag by default 
+            <router-link to="/NotFound ">Not Found</router-link> --
+            <router-link to="/Home ">Home</router-link> --
+            <router-link to="/About ">About</router-link>
+        </p>
+        <!-- route outlet -->
+    <!-- component matched by the route will render here
+        <router-view></router-view>
+    </div>
+ -->
+    <script src="js/vue2demo.js "></script>
+
+</body>
+
+
+</html>
